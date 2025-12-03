@@ -1,0 +1,63 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  shellcheck:
+    name: ShellCheck Linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install shellcheck
+        run: sudo apt-get update -qq && sudo apt-get install -y shellcheck
+      - name: Run ShellCheck
+        run: make lint
+
+  config-validation:
+    name: Config Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate example config
+        run: ./tests/validate-config.sh config.yml.example
+
+  integration-docker:
+    name: Integration Tests (Docker)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build test container
+        run: docker build -t rpi-config-test -f tests/docker/Dockerfile .
+
+      - name: Run integration tests
+        run: |
+          docker run --rm \
+            -v $(pwd):/workspace \
+            -w /workspace \
+            rpi-config-test \
+            bash tests/integration/test-runner.sh
+
+  integration-podman:
+    name: Integration Tests (Podman)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Podman
+        run: sudo apt-get update && sudo apt-get install -y podman
+
+      - name: Build test container
+        run: podman build -t rpi-config-test -f tests/docker/Containerfile .
+
+      - name: Run integration tests
+        run: |
+          podman run --rm \
+            -v $(pwd):/workspace:Z \
+            -w /workspace \
+            rpi-config-test \
+            bash tests/integration/test-runner.sh

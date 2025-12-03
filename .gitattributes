@@ -1,0 +1,29 @@
+# Git attributes for auto-rpi-config
+# Ensures consistent line endings across platforms
+
+# Auto detect text files and normalize to LF
+* text=auto eol=lf
+
+# Shell scripts must always use LF
+*.sh text eol=lf
+
+# Makefile
+Makefile text eol=lf
+
+# YAML files
+*.yml text eol=lf
+
+# Markdown files
+*.md text eol=lf
+
+# Environment files
+.env* text eol=lf
+
+# Config files
+.gitignore text eol=lf
+.gitattributes text eol=lf
+.editorconfig text eol=lf
+
+# Documentation
+README* text eol=lf
+LICENSE* text eol=lf

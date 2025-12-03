@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-validate-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install shellcheck
+        run: sudo apt-get update -qq && sudo apt-get install -y shellcheck
+      - name: Lint all scripts
+        run: make lint
+      - name: Validate config example
+        run: ./tests/validate-config.sh config.yml.example
+      - name: Generate documentation
+        run: make docs
+      - name: Check docs are up-to-date
+        run: |
+          if ! git diff --exit-code README.md DEVELOPERS.md; then
+            echo "ERROR: Documentation not up-to-date. Run 'make docs' locally."
+            exit 1
+          fi

@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  test-runner:
+    build:
+      context: ../..
+      dockerfile: tests/docker/Dockerfile
+    container_name: rpi-config-test
+    volumes:
+      - ../../:/workspace
+    working_dir: /workspace
+    privileged: true
+    command: /bin/bash -c "make test-in-container"

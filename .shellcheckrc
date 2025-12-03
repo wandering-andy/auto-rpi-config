@@ -1,0 +1,10 @@
+# ShellCheck configuration for auto-rpi-config
+# https://www.shellcheck.net/wiki/Directive
+
+# Disable source following for dynamic includes
+disable=SC1090,SC1091
+
+# Disable specific checks globally
+
+# SC2034: Variable appears unused (common in sourced config files)
+disable=SC2034

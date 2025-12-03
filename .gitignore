@@ -1,0 +1,26 @@
+# User configuration files (can be any name, but must be YAML)
+# Add specific config files here to prevent accidental commits
+config.yml
+*.local.yml
+*-secret.yml
+my-*.yml
+pi-*.yml
+
+# Test fixtures that may include secrets
+tests/fixtures/*.env
+tests/fixtures/*.yml
+
+# State files and temporary files
+/var/lib/rpi-config/
+*.bak
+/tmp/yq
+
+# Editor/IDE
+*.code-workspace
+.vscode/
+.idea/
+*~
+.DS_Store
+Thumbs.db
+
+.github/copilot-instructions.md

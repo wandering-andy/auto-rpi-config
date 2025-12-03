@@ -1,0 +1,50 @@
+---
+# Raspberry Pi Configuration
+# Copy to config.yml and customize before running
+# NEVER commit config.yml to version control
+
+system:
+  # Hostname for this Pi
+  hostname: "your-pi-hostname"
+
+ssh:
+  # SSH port (default: 22)
+  port: 22
+  
+  # Your SSH public key (CRITICAL: verify before running!)
+  # Example: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI... user@host"
+  public_key: "ssh-ed25519 AAAA... replace_with_your_key user@host"
+  
+  # Disable password authentication (requires valid public_key)
+  disable_password_auth: true
+  
+  # Disable root login
+  disable_root_login: true
+
+docker:
+  # Install Docker
+  enabled: true
+  
+  # User to add to docker group
+  user: "pi"
+  
+  # Install Docker Compose
+  install_compose: true
+
+# 3D printer services to deploy. Supported:
+# - Container-backed: octoprint, octoklipper, orcaslicer, manyfold
+# - Non-container: fluidd (clones KIAUH only; no install, no systemd)
+3dprinter_services: ""  # e.g. "octoprint,fluidd"
+
+# Force reconfiguration of 3D printer services (ignores state files)
+3dprinter_force_reconfigure: false
+
+# Optional KIAUH settings (used when 'fluidd' is included)
+3dprinter_kiauh_repo: "https://github.com/dw-0/kiauh"
+3dprinter_kiauh_path: "/opt/kiauh"
+
+# Optional: Override default container images
+# 3dprinter_octoprint_image: "octoprint/octoprint:latest"
+# 3dprinter_octoklipper_image: "octoklipper/octoklipper:latest"
+# 3dprinter_orcaslicer_image: "orcaslicer/orcaslicer:latest"
+# 3dprinter_manyfold_image: "manyfold/manyfold:latest"
