@@ -1,10 +1,7 @@
 # User configuration files (can be any name, but must be YAML)
 # Add specific config files here to prevent accidental commits
 config.yml
-*.local.yml
-*-secret.yml
-my-*.yml
-pi-*.yml
+*.yml
 
 # Test fixtures that may include secrets
 tests/fixtures/*.env

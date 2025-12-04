@@ -1,50 +1,121 @@
 ---
-# Raspberry Pi Configuration
-# Copy to config.yml and customize before running
-# NEVER commit config.yml to version control
+# Auto-RPi-Config - config.yml.example
+# Copy this file to config.yml and customise for each machine.
+# NEVER commit config.yml to version control (contains secrets).
 
-system:
-  # Hostname for this Pi
-  hostname: "your-pi-hostname"
+# -----------------------
+# System / user settings
+# -----------------------
+hostname: "your-pi-hostname"
+username: "pi"
+user_password: ""                     # optional: leave empty or provide hashed value
+timezone: "UTC"                       # e.g. "America/Denver"
+keyboard_layout: "us"
+locale: "en_US.UTF-8"
+gpu_memory: 128
+auto_reboot: true
 
-ssh:
-  # SSH port (default: 22)
-  port: 22
-  
-  # Your SSH public key (CRITICAL: verify before running!)
-  # Example: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI... user@host"
-  public_key: "ssh-ed25519 AAAA... replace_with_your_key user@host"
-  
-  # Disable password authentication (requires valid public_key)
-  disable_password_auth: true
-  
-  # Disable root login
-  disable_root_login: true
+# -----------------------
+# Network
+# -----------------------
+wifi_ssid: ""
+wifi_password: ""
 
-docker:
-  # Install Docker
-  enabled: true
-  
-  # User to add to docker group
-  user: "pi"
-  
-  # Install Docker Compose
-  install_compose: true
+# Tailscale (optional)
+install_tailscale: false
+tailscale_authkey: ""
 
-# 3D printer services to deploy. Supported:
-# - Container-backed: octoprint, octoklipper, orcaslicer, manyfold
-# - Non-container: fluidd (clones KIAUH only; no install, no systemd)
-3dprinter_services: ""  # e.g. "octoprint,fluidd"
+# -----------------------
+# SSH / Security
+# -----------------------
+ssh_port: 22
+ssh_public_key: ""                    # e.g. "ssh-ed25519 AAAA... user@host" (CRITICAL: verify)
+ssh_user: "${username}"
+disable_password_auth: true
+disable_root_login: true
 
-# Force reconfiguration of 3D printer services (ignores state files)
-3dprinter_force_reconfigure: false
+enable_auto_updates: true
+disable_unnecessary_services: true
 
-# Optional KIAUH settings (used when 'fluidd' is included)
-3dprinter_kiauh_repo: "https://github.com/dw-0/kiauh"
-3dprinter_kiauh_path: "/opt/kiauh"
+# -----------------------
+# NVMe
+# -----------------------
+# If true, nvme::configure runs (and nvme health checks are enabled)
+nvme_enable: false
 
-# Optional: Override default container images
-# 3dprinter_octoprint_image: "octoprint/octoprint:latest"
-# 3dprinter_octoklipper_image: "octoklipper/octoklipper:latest"
-# 3dprinter_orcaslicer_image: "orcaslicer/orcaslicer:latest"
-# 3dprinter_manyfold_image: "manyfold/manyfold:latest"
+# -----------------------
+# Containers
+# -----------------------
+# container_runtime options:
+# - none   => do not install any container runtime
+# - podman => install podman only
+# - docker => install Docker using official installation script (get.docker.com)
+# - both   => install both podman and Docker
+container_runtime: "none"
+
+# Pre-pull arbitrary extra images (comma-separated)
+# Example: extra_containers: "nginx:latest,redis:alpine"
+extra_containers: ""
+
+# -----------------------
+# Kubernetes (K3s)
+# -----------------------
+install_k3s: false
+k3s_role: "worker"                    # worker | server
+k3s_server: ""
+k3s_token: ""
+
+# -----------------------
+# Desktop / UI
+# -----------------------
+enable_desktop: false
+install_lxqt: false
+enable_autologin: false
+
+# -----------------------
+# Development tools
+# -----------------------
+install_development: false
+git_name: "Your Name"
+git_email: "your.email@example.com"
+git_default_branch: "main"
+
+install_alacritty: false
+build_alacritty_from_source: false
+
+# -----------------------
+# 3D printer services
+# -----------------------
+# Comma-separated list of services. Supported examples:
+#  - octoprint (container)
+#  - octoklipper (container)
+#  - orcaslicer (container)
+#  - manyfold (container)
+#  - fluidd (non-container, uses KIAUH clone)
+3dprinter_services: ""
+3dprinter_octoprint_image: ""
+3dprinter_octoklipper_image: ""
+3dprinter_orcaslicer_image: ""
+3dprinter_manyfold_image: ""
+3dprinter_force_reconfigure: false  # If true, ignore the module state file and force the 3dprinter module to run again (useful for re-deploying changes)
+
+# -----------------------
+# Monitoring
+# -----------------------
+install_node_exporter: false   # Install Prometheus node_exporter to expose system metrics
+node_exporter_port: 9100       # TCP port where node_exporter will listen for Prometheus scrapes
+health_check_interval: 900     # Interval in seconds between health-check runs (900 = 15 minutes)
+
+# -----------------------
+# Runtime / housekeeping
+# -----------------------
+log_level: "info"  # debug|info|warn|error
+state_dir: "/var/lib/rpi-config/state"  # Path where modules write state/marker files to ensure idempotency.
+        # Must be writable by root. You can change to a different persistent path (e.g. /srv/rpi-config/state),
+        # but do not commit its contents to version control.
+
+# -----------------------
+# Advanced / Overrides
+# -----------------------
+extra_packages: ""  # Example: "htop,curl,git"
+# End of example
